@@ -1,0 +1,7 @@
+npm install antd
+npm install @heroicons/react
+npm install clsx react-router-dom @heroicons/react
+npm install clsx
+npm install react-chartjs-2 chart.js
+npm install @heroicons/react
+npm install lucide-react recharts @radix-ui/react-slot @radix-ui/react-icons
