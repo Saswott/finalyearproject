@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // Importing the useNavigate hook
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
-    confirmPassword: '',  // Adding state for confirm password
+    confirmPassword: '',
+    role: 'user', // Default role
+    pharmacyName: '',
+    licenseNumber: '',
+    phoneNumber: '',
+    address: ''
   });
+  
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();  // Initialize the navigate function
+  const navigate = useNavigate();
 
   const validateForm = () => {
     const newErrors = {};
@@ -27,7 +33,22 @@ const SignUp = () => {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';  // Adding confirm password check
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    if (formData.role === 'pharmacyManager') {
+      if (!formData.pharmacyName) {
+        newErrors.pharmacyName = 'Pharmacy name is required';
+      }
+      if (!formData.licenseNumber) {
+        newErrors.licenseNumber = 'License number is required';
+      }
+      if (!formData.phoneNumber) {
+        newErrors.phoneNumber = 'Phone number is required';
+      }
+      if (!formData.address) {
+        newErrors.address = 'Address is required';
+      }
     }
 
     setErrors(newErrors);
@@ -60,6 +81,33 @@ const SignUp = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Role Selection */}
+            <div className="flex gap-4 justify-center mb-6">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="role"
+                  value="user"
+                  checked={formData.role === 'user'}
+                  onChange={handleChange}
+                  className="form-radio text-emerald-600"
+                />
+                <span className="text-gray-700">Normal User</span>
+              </label>
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="role"
+                  value="pharmacyManager"
+                  checked={formData.role === 'pharmacyManager'}
+                  onChange={handleChange}
+                  className="form-radio text-emerald-600"
+                />
+                <span className="text-gray-700">Pharmacy Manager</span>
+              </label>
+            </div>
+
+            {/* Basic Fields */}
             <div>
               <input
                 name="username"
@@ -102,7 +150,6 @@ const SignUp = () => {
               )}
             </div>
 
-            {/* Confirm Password Field */}
             <div>
               <input
                 name="confirmPassword"
@@ -117,6 +164,67 @@ const SignUp = () => {
               )}
             </div>
 
+            {/* Pharmacy Manager Fields */}
+            {formData.role === 'pharmacyManager' && (
+              <div className="space-y-6">
+                <div>
+                  <input
+                    name="pharmacyName"
+                    type="text"
+                    placeholder="Pharmacy Name"
+                    value={formData.pharmacyName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all duration-200"
+                  />
+                  {errors.pharmacyName && (
+                    <div className="text-red-500 text-sm mt-1">{errors.pharmacyName}</div>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    name="licenseNumber"
+                    type="text"
+                    placeholder="License Number"
+                    value={formData.licenseNumber}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all duration-200"
+                  />
+                  {errors.licenseNumber && (
+                    <div className="text-red-500 text-sm mt-1">{errors.licenseNumber}</div>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    name="phoneNumber"
+                    type="tel"
+                    placeholder="Phone Number"
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all duration-200"
+                  />
+                  {errors.phoneNumber && (
+                    <div className="text-red-500 text-sm mt-1">{errors.phoneNumber}</div>
+                  )}
+                </div>
+
+                <div>
+                  <textarea
+                    name="address"
+                    placeholder="Pharmacy Address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    rows="3"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all duration-200"
+                  />
+                  {errors.address && (
+                    <div className="text-red-500 text-sm mt-1">{errors.address}</div>
+                  )}
+                </div>
+              </div>
+            )}
+
             <button
               type="submit"
               className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105"
@@ -129,7 +237,7 @@ const SignUp = () => {
               <button
                 type="button"
                 className="text-emerald-600 hover:text-emerald-700 font-medium"
-                onClick={() => navigate('/login')}  // Redirecting to Login page
+                onClick={() => navigate('/login')}
               >
                 Sign In
               </button>
